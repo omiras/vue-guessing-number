@@ -35,7 +35,7 @@ const checkGuess = () => {
           <label for="guessField">Guess a number</label>
           <input v-model="currentGuess" type="number" id="guessField" class="guessField">
           <button @click="checkGuess"
-            :disabled="attempts == 0 || previousGuesses[previousGuesses.length - 1] == randomNumber"
+            :disabled="attempts == 0 || previousGuesses[previousGuesses.length - 1] == randomNumber || !currentGuess"
             class="button-check">Check Number</button>
         </div>
         <div v-show="previousGuesses.length != 0">
