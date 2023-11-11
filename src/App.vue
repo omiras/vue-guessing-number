@@ -43,6 +43,7 @@ const mustDisable = computed(() => {
 
 <template>
   <main>
+    <!-- check-->
     <h2>Number guessing game</h2>
 
     <section v-if="isPlaying">
