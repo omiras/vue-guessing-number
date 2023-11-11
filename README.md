@@ -1,6 +1,14 @@
 # vue-guessing-number
 
-This template should help get you started developing with Vue 3 in Vite.
+Implementemos el juego de adivinar un número entre 1 y 100, con el mismo funcionamiento que su versión en JavaScript _vanilla_
+
+Implementa el juego completo en App.vue
+
+Cuando esté funcionando, podemos implementar las siguientes mejoras:
+
+1. Antes de comenzar el juego, podremos elegir el número de intentos y el número máximo a adivinar
+2. Calcular el ratio de dificultad. El ratio de difiltar se calcula dividiendo el número máximo a adivinar por el número de intentos. Si es 10-> Dificultad normal. Si es menor, es difícil. En otro caso, se considera un juego fácil
+3. Mueve este juego a un componente GuessNumber.vue. Importalo unas cuantas veces en App.vue para comprobar que puedes configurar a jugar a juegos independientes detro de la misma app
 
 ## Recommended IDE Setup
 
