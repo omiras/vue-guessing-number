@@ -4,6 +4,9 @@ Implementemos el juego de adivinar un número entre 1 y 100, con el mismo funcio
 
 Implementa el juego completo en App.vue
 
+
+[DEMO CON MEJORAS](https://vue-guessing-number.vercel.app/)
+
 Cuando esté funcionando, podemos implementar las siguientes mejoras:
 
 1. Antes de comenzar el juego, podremos elegir el número de intentos y el número máximo a adivinar
