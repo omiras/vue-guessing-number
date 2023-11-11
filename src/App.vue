@@ -34,6 +34,11 @@ const difficultyRatio = computed(() => {
 
   return "Normal"
 })
+
+const mustDisable = computed(() => {
+  return attempts.value == 0 || previousGuesses[previousGuesses.value.length - 1] == randomNumber.value || !currentGuess.value
+})
+
 </script>
 
 <template>
@@ -48,9 +53,7 @@ const difficultyRatio = computed(() => {
         <div>
           <label for="guessField">Guess a number</label>
           <input v-model="currentGuess" type="number" id="guessField" class="guessField">
-          <button @click="checkGuess"
-            :disabled="attempts == 0 || previousGuesses[previousGuesses.length - 1] == randomNumber || !currentGuess"
-            class="button-check">Check Number</button>
+          <button @click="checkGuess" :disabled="mustDisable" class="button-check">Check Number</button>
         </div>
         <div v-show="previousGuesses.length != 0">
           <p>Previous Guesses: <span>{{ previousGuesses.join("-") }}</span></p>
