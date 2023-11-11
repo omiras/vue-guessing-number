@@ -1,8 +1,10 @@
 <script setup>
 
+import { computed } from '@vue/reactivity';
 import { ref } from 'vue';
 
 const isPlaying = ref(false)
+const maxNumber = ref(100)
 const randomNumber = ref(0)
 const previousGuesses = ref([])
 const currentGuess = ref("")
@@ -10,7 +12,7 @@ const attempts = ref(3)
 
 const startGame = () => {
   console.log("Game Starts")
-  randomNumber.value = parseInt(Math.random() * 100) + 1
+  randomNumber.value = parseInt(Math.random() * maxNumber.value) + 1
   console.log("Game to guess: ", randomNumber.value)
   isPlaying.value = true;
 }
@@ -21,6 +23,17 @@ const checkGuess = () => {
   currentGuess.value = ""
   attempts.value--
 }
+
+const difficultyRatio = computed(() => {
+  const ratio = maxNumber.value / attempts.value
+  if (ratio > 10) {
+    return "Hard"
+  } else if (ratio < 10) {
+    return "Easy"
+  }
+
+  return "Normal"
+})
 </script>
 
 <template>
@@ -28,8 +41,9 @@ const checkGuess = () => {
     <h2>Number guessing game</h2>
 
     <section v-if="isPlaying">
-      <p>Try and guess a random number between 1 and 100.</p>
-      <p>You have 10 attempts to guess the right number.</p>
+      <p>Try and guess a random number between 1 and {{ maxNumber }}.</p>
+      <p>You have {{ attempts }} attempts to guess the right number.</p>
+      <p>Your difficulty ratio is {{ difficultyRatio }}</p>
       <div id="wrapper">
         <div>
           <label for="guessField">Guess a number</label>
@@ -55,6 +69,10 @@ const checkGuess = () => {
       </div>
     </section>
     <section v-else>
+      <label for="maxNumber">Max Number to Guess</label>
+      <input v-model="maxNumber" type="number" id="maxNumber">
+      <label for="attemps">Max Number of attemps to guess the number</label>
+      <input v-model="attempts" type="number" name="" id="attemps">
       <button @click="startGame">Start Game</button>
     </section>
   </main>
