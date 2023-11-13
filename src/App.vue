@@ -39,6 +39,10 @@ const mustDisable = computed(() => {
   return attempts.value == 0 || previousGuesses[previousGuesses.value.length - 1] == randomNumber.value || !currentGuess.value
 })
 
+const lastGuess = computed(() => {
+  return previousGuesses.value[previousGuesses.value.length - 1]
+})
+
 </script>
 
 <template>
@@ -59,14 +63,14 @@ const mustDisable = computed(() => {
         <div v-show="previousGuesses.length != 0">
           <p>Previous Guesses: <span>{{ previousGuesses.join("-") }}</span></p>
           <p>Guesses Remaining: <span class="lastResult"> {{ attempts }}</span></p>
-          <p v-if="attempts == 0 && previousGuesses[previousGuesses.length - 1] != randomNumber"> YOU LOST 🤧</p>
-          <p style="color: red" v-else-if="previousGuesses[previousGuesses.length - 1] > randomNumber"> Correct number is
+          <p v-if="attempts == 0 && lastGuess != randomNumber"> YOU LOST 🤧</p>
+          <p style="color: red" v-else-if="lastGuess > randomNumber"> Correct number is
             lower &#8595;
           </p>
-          <p style="color: green" v-else-if="previousGuesses[previousGuesses.length - 1] < randomNumber"> Correct number
+          <p style="color: green" v-else-if="lastGuess < randomNumber"> Correct number
             is
             higher &#x2191;</p>
-          <p v-else-if="previousGuesses[previousGuesses.length - 1] == randomNumber" style="font-size: 48px;">You Won!!
+          <p v-else-if="lastGuess == randomNumber" style="font-size: 48px;">You Won!!
             Correct number was {{
               randomNumber }} </p>
         </div>
