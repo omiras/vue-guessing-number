@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 // Número a adivinar
 const randomNumber = ref(parseInt(Math.random() * 100) + 1)
@@ -11,8 +11,12 @@ const isPlaying = ref(false)
 // variable para almacenar todos los números que el jugador va probando
 const previousGuesses = ref([])
 
+
 // Número que ha escrito el usuario en el <input>
 const currentGuess = ref("")
+
+// número de intentos
+const attempts = ref(10)
 
 const startGame = () => {
   console.log("Game Starts")
@@ -23,8 +27,12 @@ const checkGuess = () => {
   // añadir el número que ha pusto en el input el usuario a la variable previousGuesses
   previousGuesses.value.push(currentGuess.value)
   currentGuess.value = ""
+  attempts.value-- // attemps.value = attempts.value - 1
 }
 
+const lastNumber = computed(() => {
+  return previousGuesses.value[previousGuesses.value.length - 1]
+})
 // En los ficheros SFC, NO hace falta exportar ninguna variable ni función. Están automáticamente disponibles en todo el <template>
 
 // Reto: al hacer clic en el boton, nos "cambia" de pantalla
@@ -47,6 +55,26 @@ const checkGuess = () => {
  * Coregir: 13:50
  */
 
+/**
+ * Reto: Decrementar número de intentos
+ * 
+ * 1. Crea una variable de estado nueva inicilizada a 10
+ * 2. Modificar el <template> para que se visualicen el número de intentos restantes
+ * 3. Cada vez que se introduzca un número, decrementar el número de intentos
+ * 
+ * Corregir: 10.11
+ */
+
+/**
+ * Reto: En el <template>
+ * 
+ * 1. En la <p>           <p class="lowOrHi"></p>,
+ * usa adecuadamente las directivas v-if , v-else para informar al usuario si el último número que ha introducido es mayor o menor
+ * 2. Recuerda como se usa v-if, v-else https://vuejs.org/guide/essentials/conditional.html
+ * 
+ * Corregir: 10:50
+ */
+
 </script>
 
 <template>
@@ -61,10 +89,13 @@ const checkGuess = () => {
         <input v-model="currentGuess" type="number" id="guessField">
         <button @click="checkGuess" class="button-check">Check Guess</button>
 
-        <div class="resultParas">
+        <div v-show="lastNumber" class="resultParas">
           <p>Previous Guesses: <span class="guesses"> {{ previousGuesses.join("-") }}</span></p>
-          <p>Guesses Remaining: <span class="lastResult">10</span></p>
-          <p class="lowOrHi"></p>
+          <p>Last number checked: {{ lastNumber }}</p>
+          <p>Guesses Remaining: <span class="lastResult">{{ attempts }}</span></p>
+          <p v-if="randomNumber > lastNumber" style="color: green">El número debe ser mayor</p>
+          <p v-else style="color: red">El número debe ser menor</p>
+
         </div>
       </div>
     </section>
