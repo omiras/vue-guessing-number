@@ -2,8 +2,11 @@
 
 import { ref, computed } from 'vue';
 
+// Número máximo de intentos
+const MAX_ATTEMPS = 10
+
 // Número a adivinar
-const randomNumber = ref(parseInt(Math.random() * 100) + 1)
+const randomNumber = ref(0)
 
 // Variable de estado nos determina si estamos jugando o no
 const isPlaying = ref(false)
@@ -16,11 +19,22 @@ const previousGuesses = ref([])
 const currentGuess = ref("")
 
 // número de intentos
-const attempts = ref(10)
+const attempts = ref(MAX_ATTEMPS)
 
-const startGame = () => {
-  console.log("Game Starts")
+// const startGame = () => {
+//   console.log("Game Starts")
+// }
+
+const newGame = () => {
+  console.log("Game restarts");
   isPlaying.value = true
+
+  randomNumber.value = Math.floor(Math.random() * 100) + 1
+  console.log("🚀 ~ file: App.vue:33 ~ newGame ~  randomNumber.value:", randomNumber.value)
+
+  previousGuesses.value = []
+  attempts.value = MAX_ATTEMPS
+
 }
 
 const checkGuess = () => {
@@ -32,6 +46,10 @@ const checkGuess = () => {
 
 const lastNumber = computed(() => {
   return previousGuesses.value[previousGuesses.value.length - 1]
+})
+
+const isGameFinished = computed(() => {
+  return attempts.value == 0 || lastNumber.value == randomNumber.value
 })
 // En los ficheros SFC, NO hace falta exportar ninguna variable ni función. Están automáticamente disponibles en todo el <template>
 
@@ -75,6 +93,31 @@ const lastNumber = computed(() => {
  * Corregir: 10:50
  */
 
+/**
+ * REto: mensajes de has ganado o has perdido
+ * 
+ * 1. ¿Cómo sabemos que hemos perdido? Cuando attempts es 0 Y mi ultimo intento también ha fallado
+ *   - mi ultimo intento: lastNumber
+ *   - el numero a adivinar: randomNumber
+ * 2. ¿Cómo sabemos que he ganado? Si mi último intento (lastNumber) es igual al número a adivinar, he ganado
+ * 
+ * Corregir: 9.30
+ */
+
+/**
+ * Reto: Reset game
+ * 
+ * 1. Cuando has ganado o has perdido, aparece un nuevo <button>
+ * 2. Al hacer click en el button:
+ *    1. Calcular un nuevo valor aleatorio y asignarlo a la variable random Number
+ *    2. Limpiar/Vaciar/reiniciar el array de previousGuesses
+ *    3. Cambiar el valor de la variable isPlaying a false
+ *    4. Actualizar la variable attempts
+ * 
+ * Corregir: 10.25
+ * 
+ */
+
 </script>
 
 <template>
@@ -86,21 +129,25 @@ const lastNumber = computed(() => {
       <p>You have 10 attempts to guess the right number.</p>
       <div id="wrapper">
         <label for="guessField">Guess a number</label>
-        <input v-model="currentGuess" type="number" id="guessField">
-        <button @click="checkGuess" class="button-check">Check Guess</button>
+        <input :disabled="isGameFinished" v-model="currentGuess" type="number" id="guessField">
+        <button :disabled="!currentGuess" @click="checkGuess" class="button-check">Check Guess</button>
 
         <div v-show="lastNumber" class="resultParas">
           <p>Previous Guesses: <span class="guesses"> {{ previousGuesses.join("-") }}</span></p>
           <p>Last number checked: {{ lastNumber }}</p>
           <p>Guesses Remaining: <span class="lastResult">{{ attempts }}</span></p>
-          <p v-if="randomNumber > lastNumber" style="color: green">El número debe ser mayor</p>
+          <p style="color: red; background-color: black;" v-if="attempts === 0 && lastNumber != randomNumber">¡Has
+            perdido! El número a adivinar era : {{ randomNumber
+            }} </p>
+          <p v-else-if="randomNumber == lastNumber">¡Felicidades! Has ganado</p>
+          <p v-else-if="randomNumber > lastNumber" style="color: green">El número debe ser mayor</p>
           <p v-else style="color: red">El número debe ser menor</p>
-
         </div>
       </div>
+      <button v-show="isGameFinished" @click="newGame" style="background-color: green">New Game</button>
     </section>
     <section v-else>
-      <button @click="startGame">Start Game</button>
+      <button @click="newGame">Start Game</button>
     </section>
   </main>
 </template>
